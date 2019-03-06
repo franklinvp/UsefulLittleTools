@@ -41,7 +41,7 @@ private:
     template<typename First, typename... Rest>
     void _write(First param1, Rest...param) 
     {
-        i_buf << param1 << ", ";
+        i_buf << param1 << (sizeof...(Rest) > 0 ? ", " : "");
         _write(param...);
     }
 
@@ -84,21 +84,21 @@ struct thread_method
 
 int main() 
 {
-  std::vector<thread_method> tms;
-  std::vector<std::thread> vthreads;
-  for (int i = 0; i < 20; ++i) 
-  {
-    thread_method tm(std::string("Writer ") + std::to_string(i) + ":");
-    tms.push_back(tm);
-    vthreads.push_back(std::thread(tms[i]));
-  }
+    std::vector<thread_method> tms;
+    std::vector<std::thread> vthreads;
+    for (int i = 0; i < 20; ++i) 
+    {
+      thread_method tm(std::string("Writer ") + std::to_string(i));
+      tms.push_back(tm);
+      vthreads.push_back(std::thread(tms[i]));
+    }
 
-  for (auto& th : vthreads)
-  {
-    th.join();
-  }
+    for (auto& th : vthreads)
+    {
+      th.join();
+    }
 
-  std::cout << "Done" << std::endl;
-  return 0;
+    std::cout << "Done" << std::endl;
+    return 0;
 }
 
