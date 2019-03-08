@@ -84,11 +84,12 @@ int main()
         result = obj->Rear();
         success = obj->deQueue();
         result = obj->Front();
+        std::cout << "So far so good" << std::endl;
         success = obj->deQueue();
         success = obj->deQueue();
         success = obj->deQueue();
     }
-    catch (std::exception e)
+    catch (const std::exception& e)
     {
         std::cout << e.what() << std::endl;
     }
