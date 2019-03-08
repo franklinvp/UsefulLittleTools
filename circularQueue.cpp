@@ -1,7 +1,10 @@
 #include <vector>
 #include <algorithm>    // std::min
 #include <memory>       // std::unique_ptr
+#include <stdexcept>    // std::out_of_range exception
+#include <iostream>     // std::cout, std::endl
 
+template<typename T>
 class MyCircularQueue {
 public:
     /** Initialize your data structure here. Set the size of the queue to be k. */
@@ -9,7 +12,7 @@ public:
     }
 
     /** Insert an element into the circular queue. Return true if the operation is successful. */
-    bool enQueue(int value) {
+    bool enQueue(T value) {
         if (isFull())
             return false;
         container[end] = value;
@@ -29,16 +32,16 @@ public:
     }
 
     /** Get the front item from the queue. */
-    int Front() {
+    T Front() {
         if (isEmpty())
-            return -1;
+            throw std::out_of_range("Front(): Circular queue is empty");
         return container[start];
     }
 
     /** Get the last item from the queue. */
-    int Rear() {
+    T Rear() {
         if (isEmpty())
-            return -1;
+            throw std::out_of_range("Rear(): Circular queue is empty");
         return container[decrement(end)];
     }
 
@@ -54,7 +57,7 @@ public:
 private:
     bool empty;
     int start, end;
-    std::vector<int> container;
+    std::vector<T> container;
 
     inline int increment(int p)
     {
@@ -70,19 +73,25 @@ private:
 
 int main()
 {
-
-    std::unique_ptr<MyCircularQueue> obj(new MyCircularQueue(6));
-    bool success = obj->enQueue(6);
-    int result = obj->Rear();
-    result = obj->Rear();
-    int result = obj->deQueue();
-    success = obj->enQueue(5);
-    result = obj->Rear();
-    success = obj->deQueue();
-    result = obj->Front();
-    success = obj->deQueue();
-    success = obj->deQueue();
-    success = obj->deQueue();
-
+    try 
+    {
+        std::unique_ptr<MyCircularQueue<int>> obj(new MyCircularQueue<int>(6));
+        bool success = obj->enQueue(6);
+        int result = obj->Rear();
+        result = obj->Rear();
+        success = obj->deQueue();
+        success = obj->enQueue(5);
+        result = obj->Rear();
+        success = obj->deQueue();
+        result = obj->Front();
+        success = obj->deQueue();
+        success = obj->deQueue();
+        success = obj->deQueue();
+    }
+    catch (std::exception e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    
     return 0;
 }
